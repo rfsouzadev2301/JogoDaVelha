@@ -12,13 +12,13 @@ public class Game {
 	
 	private Board board = new Board(3, 3);
 	private Player[] players = new Player[2];
-	private MatchReports info;
+	private MatchReports data;
 	private UI Ui;
 
 	public Game(UI ui, Player[] players) {
 		this.Ui = ui;
 		this.players = players;
-		info = new MatchReports(GameStatus.RUNNING, this.players[0], this.players[1]);
+		data = new MatchReports(GameStatus.RUNNING, this.players[0], this.players[1]);
 	}
 	
 	public Game(UI ui) {
@@ -28,33 +28,31 @@ public class Game {
 	public void setPlayer(Player[] players) {
 		if(players == null){
 			this.players = players;
-			info = new MatchReports(GameStatus.RUNNING, this.players[0], this.players[1]);
+			data = new MatchReports(GameStatus.RUNNING, this.players[0], this.players[1]);
 		}
 	}
 	
 	public void Match() {
 		do {
 			nextRound();
-		}while(info.getGameStatus() == GameStatus.RUNNING);
-		Ui.finished(info);
+		}while(data.getGameStatus() == GameStatus.RUNNING);
+		Ui.finished(data);
 		return;
 	}
 	
 	public void nextRound() {
-		info.incrementRound();
-		System.out.println("Round: " + info.getRound());
-		System.out.println();
-		Ui.updateTable(board);
+		data.incrementRound();
+		Ui.updateHash(board);
 		
 		for(Player player: players) {
 			
-			if(info.getGameStatus() != GameStatus.RUNNING) {
+			if(data.getGameStatus() != GameStatus.RUNNING) {
 				return;
 			}
 			GamePosition position = null;
 			do {
 				try {
-					position = Ui.askPositionForPlayer(player);
+					position = Ui.inputMovePosition();
 					if(board.hasPieceInPosition(position.toPostion())) {
 						throw (new VelhaException("This position already contains a piece!"));
 					}
@@ -69,11 +67,11 @@ public class Game {
 					System.out.println(e.getMessage());
 					System.out.println();
 				}finally {
-					Ui.updateTable(board);
+					Ui.updateHash(board);
 				}
 			}while (position == null);
 		
-			if(info.getGameStatus() != GameStatus.RUNNING) {
+			if(data.getGameStatus() != GameStatus.RUNNING) {
 				return;
 			}
 			updateTurn();
@@ -81,7 +79,7 @@ public class Game {
 	}
 	
 	public void playerMove(GamePosition position) {
-		board.insertPiece(info.getPlayerTurn().getPiece(), position.toPostion());
+		board.insertPiece(data.getPlayerTurn().getPiece(), position.toPostion());
 		verifyMatch(board);
 	}
 	
@@ -90,20 +88,20 @@ public class Game {
 	}
 	
  	public void updateTurn() {
-		Player lastPlayerTurn = info.getPlayerTurn();
-		info.setPlayerTurn(info.getNextPlayer());
-		info.setNextPlayer(lastPlayerTurn); 
+		Player lastPlayerTurn = data.getPlayerTurn();
+		data.setPlayerTurn(data.getNextPlayer());
+		data.setNextPlayer(lastPlayerTurn); 
 	}
 	
 	public void verifyMatch(Board board) {
 		if(hasWinner(board)) {
-			info.setGameStatus(GameStatus.WINNER);
-			info.setWinner(info.getPlayerTurn());
+			data.setGameStatus(GameStatus.WINNER);
+			data.setWinner(data.getPlayerTurn());
 			return;
 		}
 		if(hasVelha(board)) {
-			info.setGameStatus(GameStatus.VELHA);
-			info.setVelha(true);
+			data.setGameStatus(GameStatus.VELHA);
+			data.setVelha(true);
 			return;
 		}
 	}
@@ -152,10 +150,10 @@ public class Game {
 			for (int i = 0; i < 3; i++){
 				for (int j = 0; j < 3; j++){
 					if(boardNextPlayer[i][j] == null) {
-						boardNextPlayer[i][j] = info.getNextPlayer().getPiece();
+						boardNextPlayer[i][j] = data.getNextPlayer().getPiece();
 					}
 					if(boardPlayerTurn[i][j] == null) {
-						boardPlayerTurn[i][j] = info.getPlayerTurn().getPiece();
+						boardPlayerTurn[i][j] = data.getPlayerTurn().getPiece();
 					}
 				}
 			}
@@ -164,5 +162,9 @@ public class Game {
 			}
 		
 			return false;
+	}
+
+	public MatchReports getData() {
+		return data;
 	}
 }

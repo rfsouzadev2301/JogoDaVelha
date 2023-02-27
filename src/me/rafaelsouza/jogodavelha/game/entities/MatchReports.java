@@ -5,9 +5,9 @@ import me.rafaelsouza.jogodavelha.game.enums.GameStatus;
 public class MatchReports {
 	
 	private GameStatus gameStatus = GameStatus.STOPPED;
-	private Player playerTurn = new Player("PLAYER_1", new GamePiece(null, '!'))
-			, nextPlayer = new Player("PLAYER_2", new GamePiece(null, '!'))
-			, winner = new Player("UNDEFINED", new GamePiece(null, '!'));
+	private Player playerTurn = new Player("PLAYER_1", new GamePiece(null, null))
+			, nextPlayer = new Player("PLAYER_2", new GamePiece(null, null))
+			, winner = new Player("UNDEFINED", new GamePiece(null, null));
 	private boolean velha = false;
 	private int round = 0;
 			

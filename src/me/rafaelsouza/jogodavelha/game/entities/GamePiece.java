@@ -2,18 +2,19 @@ package me.rafaelsouza.jogodavelha.game.entities;
 
 import me.rafaelsouza.jogodavelha.board.entities.Piece;
 import me.rafaelsouza.jogodavelha.board.entities.Position;
+import me.rafaelsouza.jogodavelha.game.enums.PieceType;
 
 public class GamePiece extends Piece{
 	
-	protected Character symbol;
+	protected PieceType piece;
 
-	public GamePiece(Position position, Character symbol) {
+	public GamePiece(Position position, PieceType piece) {
 		super(position);
-		this.symbol = symbol;
+		this.piece = piece;
 	}
 
-	public char getSymbol() {
-		return symbol;
+	public PieceType getSymbol() {
+		return piece;
 	}
 
 }
