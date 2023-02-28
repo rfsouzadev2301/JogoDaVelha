@@ -1,15 +1,16 @@
 package me.rafaelsouza.jogodavelha.game.entities;
 
 import me.rafaelsouza.jogodavelha.game.enums.GameStatus;
+import me.rafaelsouza.jogodavelha.game.enums.PieceType;
 
 public class MatchReports {
 	
 	private GameStatus gameStatus = GameStatus.STOPPED;
-	private Player playerTurn = new Player("PLAYER_1", new GamePiece(null, null))
-			, nextPlayer = new Player("PLAYER_2", new GamePiece(null, null))
+	private Player playerTurn = new Player("PLAYER_1", new GamePiece(null, PieceType.PIECE_O))
+			, nextPlayer = new Player("PLAYER_2", new GamePiece(null, PieceType.PIECE_X))
 			, winner = new Player("UNDEFINED", new GamePiece(null, null));
 	private boolean velha = false;
-	private int round = 0;
+	private int moves = 0;
 			
 	public MatchReports(GameStatus gameStatus, Player playerTurn, Player nextPlayer) {
 		this.gameStatus = gameStatus;
@@ -44,7 +45,7 @@ public class MatchReports {
 		return winner;
 	}
 	
-	protected void setWinner(Player winner) {
+	public void setWinner(Player winner) {
 		this.winner = winner;
 	}
 	
@@ -56,12 +57,12 @@ public class MatchReports {
 		this.velha = velha;
 	}
 	
-	public int getRound() {
-		return round;
+	public int getMoves() {
+		return moves;
 	}
 	
-	public void incrementRound() {
-		round++;
+	public void incrementMoves() {
+		moves++;
 	}
 	
 	@Override
@@ -69,7 +70,7 @@ public class MatchReports {
 		
 		StringBuilder sb = new StringBuilder()
 				.append("Game Status: " + gameStatus.toString())
-				.append("\nRound: " + round)
+				.append("\nMoves: " + moves)
 				.append("\nPlayer Turn: " + playerTurn.getName())
 				.append("\nNext Player: " + nextPlayer.getName())
 				.append("\n\nWinner: " + winner.getName())
