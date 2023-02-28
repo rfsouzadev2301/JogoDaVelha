@@ -6,6 +6,7 @@ import me.rafaelsouza.jogodavelha.board.entities.Board;
 import me.rafaelsouza.jogodavelha.board.entities.Piece;
 import me.rafaelsouza.jogodavelha.board.exceptions.BoardException;
 import me.rafaelsouza.jogodavelha.game.enums.GameStatus;
+import me.rafaelsouza.jogodavelha.game.enums.LineWinner;
 import me.rafaelsouza.jogodavelha.game.exceptions.VelhaException;
 
 public class Game {
@@ -74,12 +75,12 @@ public class Game {
 		}
 	}
 	
-	public void movePiece(GamePiece piece, GamePosition position) {
+	private void movePiece(GamePiece piece, GamePosition position) {
 		board.insertPiece(piece, position.toPostion());
 		matchData.incrementMoves();
 	}
 	
-	public boolean verifyPosition(GamePosition position) {
+	boolean verifyPosition(GamePosition position) {
 		return !board.hasPieceInPosition(position.toPostion());
 	}
 	
@@ -89,42 +90,58 @@ public class Game {
 		matchData.setNextPlayer(lastPlayerTurn); 
 	}
 	
-	public void verifyMatch(Board board) {
-		if(hasWinner(board)) {
+	private void verifyMatch(Board board) {
+		LineWinner lineWinner = lineWinner(board);
+		
+		if(lineWinner != LineWinner.UNDEFINED) {
 			matchData.setGameStatus(GameStatus.WINNER);
 			matchData.setVelha(false);
-			matchData.setWinner(matchData.getPlayerTurn());
+			matchData.setWinner(matchData.getPlayerTurn(), lineWinner);
 			return;
 		}else if(hasVelha(board)) {
 			matchData.setGameStatus(GameStatus.VELHA);
 			matchData.setVelha(true);
-			matchData.setWinner(new Player("Velha", null));
+			matchData.setWinner(new Player("Velha", null), lineWinner);
 			return;
 		}
 	}
 
-	public boolean hasWinner(Board board) {
+	private LineWinner lineWinner(Board board) {
 		
 		if (board.getBoard()[0][0] == board.getBoard()[1][1] && board.getBoard()[0][0] == board.getBoard()[2][2] && board.getBoard()[0][0] != null) {
-			return true;
+			return LineWinner.DIAGONAL_A1_C3;
 		}
 		if (board.getBoard()[0][2] == board.getBoard()[1][1] && board.getBoard()[0][2] == board.getBoard()[2][0] && board.getBoard()[0][2] != null) {
-			return true;
+			return LineWinner.DIAGONAL_A3_C1;
 		}
 		for (int i = 0; i < 3; i++) {	
 			if (board.getBoard()[i][0] == board.getBoard()[i][1] && board.getBoard()[i][0] == board.getBoard()[i][2] && board.getBoard()[i][0] != null) {
-				return true;
+				switch (i) {
+					case 0:
+						return LineWinner.LINE_1;
+					case 1:
+						return LineWinner.LINE_2;
+					case 2:
+						return LineWinner.LINE_3;
+				}
 			}
 		}
 		for (int j = 0; j < 3; j++) {
 			if (board.getBoard()[0][j] == board.getBoard()[1][j] && board.getBoard()[0][j] == board.getBoard()[2][j] && board.getBoard()[0][j] != null) {
-				return true;
+				switch (j) {
+					case 0:
+						return LineWinner.COLUMN_1;
+					case 1:
+						return LineWinner.COLUMN_2;
+					case 2:
+						return LineWinner.COLUMN_3;
+				}
 			}
 		}
-		return false;	
+		return LineWinner.UNDEFINED;	
 	}
 	
-	public boolean hasVelha(Board board) {
+	private boolean hasVelha(Board board) {
 
 		if(winnerPossibility(board)) {
 			return false;
@@ -155,7 +172,7 @@ public class Game {
 					}
 				}
 			}
-			if (hasWinner(new Board(boardNextPlayer)) || hasWinner(new Board(boardPlayerTurn))){
+			if (lineWinner(new Board(boardNextPlayer)) != LineWinner.UNDEFINED || lineWinner(new Board(boardPlayerTurn)) != LineWinner.UNDEFINED){
 				return true;
 			}
 			return false;

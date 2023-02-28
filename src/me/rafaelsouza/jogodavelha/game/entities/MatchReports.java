@@ -1,11 +1,13 @@
 package me.rafaelsouza.jogodavelha.game.entities;
 
 import me.rafaelsouza.jogodavelha.game.enums.GameStatus;
+import me.rafaelsouza.jogodavelha.game.enums.LineWinner;
 import me.rafaelsouza.jogodavelha.game.enums.PieceType;
 
 public class MatchReports {
 	
 	private GameStatus gameStatus = GameStatus.STOPPED;
+	private LineWinner lineWinner = LineWinner.UNDEFINED;
 	private Player playerTurn = new Player("PLAYER_1", new GamePiece(null, PieceType.PIECE_O))
 			, nextPlayer = new Player("PLAYER_2", new GamePiece(null, PieceType.PIECE_X))
 			, winner = new Player("UNDEFINED", new GamePiece(null, null));
@@ -25,6 +27,7 @@ public class MatchReports {
 	public GameStatus getGameStatus() {
 		return gameStatus;
 	}
+
 	public void setGameStatus(GameStatus gameStatus) {
 		this.gameStatus = gameStatus;
 	}
@@ -41,12 +44,18 @@ public class MatchReports {
 		this.nextPlayer = nextPlayer;
 	}
 	
+	
+	public LineWinner getLineWinner() {
+		return lineWinner;
+	}
+	
 	public Player getWinner() {
 		return winner;
 	}
 	
-	public void setWinner(Player winner) {
+	public void setWinner(Player winner, LineWinner lineWinner) {
 		this.winner = winner;
+		this.lineWinner = lineWinner;
 	}
 	
 	public boolean isVelha() {
