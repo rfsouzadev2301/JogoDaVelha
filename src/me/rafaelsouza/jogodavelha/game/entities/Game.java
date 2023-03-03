@@ -5,6 +5,7 @@ import java.util.InputMismatchException;
 import me.rafaelsouza.jogodavelha.board.entities.Board;
 import me.rafaelsouza.jogodavelha.board.entities.Piece;
 import me.rafaelsouza.jogodavelha.board.exceptions.BoardException;
+import me.rafaelsouza.jogodavelha.game.entities.player.Player;
 import me.rafaelsouza.jogodavelha.game.enums.GameStatus;
 import me.rafaelsouza.jogodavelha.game.enums.LineWinner;
 import me.rafaelsouza.jogodavelha.game.exceptions.VelhaException;
@@ -51,16 +52,16 @@ public class Game {
 			do {
 				try {
 					if(board.hasPieceInPosition(position.toPostion())) {
-						throw (new VelhaException("This position already contains a piece!"));
+						throw new VelhaException("This position already contains a piece!");
 					}else {
 						movePiece(matchData.getPlayerTurn().getPiece(), position);
 					}
 					
 				}catch(InputMismatchException | BoardException e) {
-					System.out.println("This position is invalid! ");
+					throw new VelhaException("This position is invalid! ");
 					
 				}catch(VelhaException e) {
-					System.out.println(e.getMessage());
+					throw new VelhaException(e.getMessage());
 				}
 
 			}while (position == null);	
@@ -180,5 +181,9 @@ public class Game {
 	
 	public MatchReports getMatchData() {
 		return matchData;
+	}
+	
+	public Piece[][] getBoard() {
+		return board.getBoard();
 	}
 }

@@ -1,5 +1,6 @@
 package me.rafaelsouza.jogodavelha.game.entities;
 
+import me.rafaelsouza.jogodavelha.game.entities.player.Player;
 import me.rafaelsouza.jogodavelha.game.enums.GameStatus;
 import me.rafaelsouza.jogodavelha.game.enums.LineWinner;
 import me.rafaelsouza.jogodavelha.game.enums.PieceType;

@@ -1,4 +1,6 @@
-package me.rafaelsouza.jogodavelha.game.entities;
+package me.rafaelsouza.jogodavelha.game.entities.player;
+
+import me.rafaelsouza.jogodavelha.game.entities.GamePiece;
 
 public class Player {
 	
